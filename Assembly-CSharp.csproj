@@ -49,13 +49,15 @@
   <ItemGroup>
     <Compile Include="Assets\Src\Config.cs" />
     <Compile Include="Assets\Src\Controller.cs" />
+    <Compile Include="Assets\Src\CalcTools.cs" />
     <Compile Include="Assets\Src\BrickDef.cs" />
     <Compile Include="Assets\Src\BrickGroup.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Src\Brick.cs" />
     <Compile Include="Assets\Src\BrickInfo.cs" />
     <Compile Include="Assets\Src\BrickController.cs" />
-    <Compile Include="Assets\BoardBehaviour.cs" />
+    <Compile Include="Assets\Src\BrickCursor.cs" />
+    <Compile Include="Assets\Src\VirtualBrick.cs" />
     <Compile Include="Assets\Src\MonoBehaviourSingleton.cs" />
   </ItemGroup>
   <ItemGroup>

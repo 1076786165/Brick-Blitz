@@ -6,6 +6,7 @@ public class BrickDef : MonoBehaviourSingleton<BrickDef>
 {
     public GameObject _brick_prefab;
     public GameObject _brick_group_prefab;
+    public GameObject _brick_cursor_prefab;
 
     Dictionary<string, BrickInfo> _brick_def = new Dictionary<string, BrickInfo>();
 
@@ -16,7 +17,7 @@ public class BrickDef : MonoBehaviourSingleton<BrickDef>
             {1 , 0 , 0 , 0},
             {1 , 0 , 0 , 0},
             {1 , 0 , 0 , 0},
-            {1 , 1 , 1 , 0},
+            {1 , 1 , 1 , 1},
         });
         _brick_def.Add("L1", L1);
 
