@@ -17,7 +17,7 @@ public class BrickDef : MonoBehaviourSingleton<BrickDef>
             {1 , 0 , 0 , 0},
             {1 , 0 , 0 , 0},
             {1 , 0 , 0 , 0},
-            {1 , 1 , 1 , 1},
+            {1 , 1 , 0 , 0},
         });
         _brick_def.Add("L1", L1);
 
@@ -25,5 +25,10 @@ public class BrickDef : MonoBehaviourSingleton<BrickDef>
 
     public BrickInfo GetBrickDef(string shape_name){
         return _brick_def[shape_name];
+    }
+
+    public BrickInfo CreateBrickInfoWithShape(int[,] shape , string name = "custom"){
+        BrickInfo L1 = new BrickInfo(name , shape);
+        return L1;
     }
 }

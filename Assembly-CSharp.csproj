@@ -57,6 +57,7 @@
     <Compile Include="Assets\Src\BrickInfo.cs" />
     <Compile Include="Assets\Src\BrickController.cs" />
     <Compile Include="Assets\Src\BrickCursor.cs" />
+    <Compile Include="Assets\Src\BrickGroupBase.cs" />
     <Compile Include="Assets\Src\VirtualBrick.cs" />
     <Compile Include="Assets\Src\MonoBehaviourSingleton.cs" />
   </ItemGroup>

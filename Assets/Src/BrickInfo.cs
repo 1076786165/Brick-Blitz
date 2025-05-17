@@ -14,7 +14,7 @@ public class BrickInfo
         _shape = shape;
     }
 
-    public void eachBrickInfo(Action<int, int> act){
+    public void EachBrickInfo(Action<int, int> act){
         for(int i = 0 ; i < 4 ; i++){
             for(int j = 0 ; j < 4 ; j++){
                 if(_shape[i , j] > 0){

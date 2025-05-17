@@ -20,11 +20,15 @@ public class Brick : MonoBehaviour
 
         updateCoor();
     }
+    public void setGroupCoor(Vector2Int group_coor){
+        _global_coor = group_coor + _local_coor;
+    }
+
     public void updateCoor(){
         gameObject.transform.localPosition = new Vector2(_local_coor.x * Config.BRICK_SIZE.x , _local_coor.y * Config.BRICK_SIZE.y);
     }
 
-    public void setIsCursor(){
+    public void SetIsCursor(){
         Image targetImage = GetComponent<Image>();
         Color newColor = targetImage.color;
         newColor.a = 0.5f;
