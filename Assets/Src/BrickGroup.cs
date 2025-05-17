@@ -12,16 +12,19 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
     public Vector2Int _coor{get;set;}
     public int _group_id{get;set;}
     public List<Brick> _bricks{get;set;}
+    public int _slot_id;
 
     private Vector2Int _begin_coor;
     private bool _is_frozen{get;set;}
 
-    public void Init(BrickInfo brick_info , Vector2Int coor , int group_id){
+    public void InitInSlot(BrickInfo brick_info , int group_id , int slot_id){
         _brick_info = brick_info;
         _group_id = group_id;
+        _slot_id = slot_id;
+        _coor = new Vector2Int(0 , 0);
 
         _bricks = new List<Brick>();
-        _brick_info.EachBrickInfo((int i , int j) => {
+        _brick_info.EachBrickShape((int i , int j) => {
             GameObject o_brick = Instantiate(BrickDef.Instance._brick_prefab , transform);
             Brick brick = o_brick.GetComponent<Brick>();
             brick.setCoor(_coor , new Vector2Int(i , j));
@@ -29,7 +32,12 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
             _bricks.Add(brick);
         });
         
-        setCoor(coor);
+        Debug.Log(_brick_info._name + " " + _brick_info.GetBrickActualSize().ToString());
+        BackToSlot();
+    }
+
+    public void BackToSlot(){
+        gameObject.transform.localPosition = CalcTools.GetCenterPosition(BrickController.Instance.GetSlotPosition(_slot_id) , _brick_info.GetBrickActualSize());
     }
 
     public void setCoor(Vector2Int coor){
@@ -79,6 +87,9 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if(_is_frozen){
+            return;
+        }
         BrickController.Instance.onBrickDragEnd(this , eventData);
     }
 

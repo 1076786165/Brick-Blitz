@@ -25,7 +25,7 @@ public class VirtualBrick
         _group_id = brick_group._group_id;
 
         _virtual_bricks = new List<Vector2Int>();
-        _brick_info.EachBrickInfo((int x, int y) => {
+        _brick_info.EachBrickShape((int x, int y) => {
             Vector2Int virtual_brick_coor = new Vector2Int(x + _coor.x, y + _coor.y);
             _virtual_bricks.Add(virtual_brick_coor);
         });

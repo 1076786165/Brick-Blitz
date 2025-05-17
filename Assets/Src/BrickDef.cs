@@ -21,6 +21,21 @@ public class BrickDef : MonoBehaviourSingleton<BrickDef>
         });
         _brick_def.Add("L1", L1);
 
+        BrickInfo O = new BrickInfo("O", new int[4 , 4]{
+            {0 , 0 , 0 , 0},
+            {0 , 0 , 0 , 0},
+            {1 , 1 , 0 , 0},
+            {1 , 1 , 0 , 0},
+        });
+        _brick_def.Add("O", O);
+
+        BrickInfo T = new BrickInfo("T", new int[4 , 4]{
+            {0 , 0 , 0 , 0},
+            {1 , 1 , 1 , 0},
+            {0 , 1 , 0 , 0},
+            {0 , 1 , 0 , 0},
+        });
+        _brick_def.Add("T", T);
     }
 
     public BrickInfo GetBrickDef(string shape_name){

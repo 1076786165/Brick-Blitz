@@ -6,8 +6,14 @@ using System;
 
 public class BrickController : MonoBehaviourSingleton<BrickController>
 {
+    // object绑定
     public Transform root;
+    public List<GameObject> brick_slots;
+
+    //棋盘相关
     private int[,] _board_map;
+    private int _slots_size = 0;
+    private int[] _slot_flags;
 
     // 检测相关
     private BrickCursor _brick_cursor;
@@ -19,6 +25,9 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
     protected override void Start()
     {
         _board_map = new int[Config.BOARD_SIZE.x , Config.BOARD_SIZE.y];
+        _slots_size = brick_slots.Count;
+        _slot_flags = new int[_slots_size];
+
 
         StartCoroutine(test());
     }
@@ -26,16 +35,31 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
     public IEnumerator test(){
         yield return null;
 
-        createBrickGroup(BrickDef.Instance.GetBrickDef("L1") , new Vector2Int(1 , 2));
+        createLiveBrickGroup(BrickDef.Instance.GetBrickDef("L1") , 0);
+        createLiveBrickGroup(BrickDef.Instance.GetBrickDef("O") , 1);
+        createLiveBrickGroup(BrickDef.Instance.GetBrickDef("T") , 2);
     }
 
-    public void createBrickGroup(BrickInfo brick_info , Vector2Int coor)
+    public void createLiveBrickGroup(BrickInfo brick_info , int slot_id)
     {
+        Debug.Assert(_slot_flags[slot_id] == 0 , "slot is already occupied！ " + slot_id);
         BrickGroup brick_group = Instantiate(BrickDef.Instance._brick_group_prefab , root).GetComponent<BrickGroup>();
-        brick_group.Init(brick_info , coor , _create_id++);
+        brick_group.InitInSlot(brick_info , _create_id++ , slot_id);
+        _slot_flags[slot_id] = 1;
     }
+
+    public void createLooseBrickGroup(BrickInfo brick_info , Vector2Int coor)
+    {
+        // BrickGroup brick_group = Instantiate(BrickDef.Instance._brick_group_prefab , root).GetComponent<BrickGroup>();
+        // brick_group.Init(brick_info , coor , _create_id++ , 1);
+    }
+
 
     public void CreateBrickCursor(BrickGroup brick_group){
+        if(_brick_cursor != null){
+            Destroy(_brick_cursor.gameObject);
+            _brick_cursor = null;
+        }
         _brick_cursor = Instantiate(BrickDef.Instance._brick_cursor_prefab , root).GetComponent<BrickCursor>();
         _brick_cursor.InitWithBrickGroup(brick_group);
     }
@@ -49,7 +73,7 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
         _last_Detect_coor = brick_group_coor;
 
         DetectResult detect_result = new VirtualBrick(brick_group , brick_group_coor).DetectingCoor(_board_map);
-        if(_brick_cursor == null){
+        if(_brick_cursor == null || _brick_cursor._group_id != brick_group._group_id){
             CreateBrickCursor(brick_group);
         }
         _brick_cursor.UpdateCoorWithDetect(detect_result);
@@ -58,6 +82,9 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
     public void onBrickDragEnd(BrickGroup brick_group , PointerEventData eventData){
         if (_brick_cursor != null && _brick_cursor.IsCursorIllegal(brick_group)){
             BrickGroupSetDown(brick_group , _brick_cursor._detect_result.coor);
+        }
+        else{
+            brick_group.BackToSlot();
         }
         
     }
@@ -74,14 +101,20 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
 
         Destroy(_brick_cursor.gameObject);
         _brick_cursor = null;
-        createBrickGroup(BrickDef.Instance.GetBrickDef("L1") , new Vector2Int(1 , 2));
+
+        _slot_flags[brick_group._slot_id] = 0;
+        createLiveBrickGroup(BrickDef.Instance.GetBrickDef("L1") , brick_group._slot_id);
     }
 
-    public void eachBoardCoor(Action<int , int> act){
+    public void EachBoardCoor(Action<int , int> act){
         for(int i = 0 ; i < Config.BOARD_SIZE.x ; i++){
             for(int j = 0 ; j < Config.BOARD_SIZE.y ; j++){
                 act(j , i);
             }
         }
+    }
+
+    public Vector2 GetSlotPosition(int slot_id){
+        return brick_slots[slot_id].transform.localPosition;
     }
 }

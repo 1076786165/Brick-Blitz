@@ -25,7 +25,7 @@ public class Brick : MonoBehaviour
     }
 
     public void updateCoor(){
-        gameObject.transform.localPosition = new Vector2(_local_coor.x * Config.BRICK_SIZE.x , _local_coor.y * Config.BRICK_SIZE.y);
+        gameObject.transform.localPosition = CalcTools.convertCoorToPosition(_local_coor);
     }
 
     public void SetIsCursor(){

@@ -15,7 +15,7 @@ public class BrickCursor : BrickGroup
         _group_id = brick_group._group_id;
 
         _bricks = new List<Brick>();
-        _brick_info.EachBrickInfo((int i , int j) => {
+        _brick_info.EachBrickShape((int i , int j) => {
             GameObject o_brick = Instantiate(BrickDef.Instance._brick_prefab , transform);
             Brick brick = o_brick.GetComponent<Brick>();
             brick.setCoor(new Vector2Int(0 , 0) , new Vector2Int(i , j));

@@ -18,4 +18,11 @@ public class CalcTools : MonoBehaviourSingleton<CalcTools>
 
         return new Vector2(x, y);
     }
+
+    public static Vector2 GetCenterPosition(Vector2 leftdown_pos , Vector2 group_size){
+        leftdown_pos.x -= Config.BRICK_SIZE.x * group_size.x / 2;
+        leftdown_pos.y -= Config.BRICK_SIZE.y * group_size.y / 2;
+
+        return leftdown_pos;
+    }
 }
