@@ -51,6 +51,7 @@
     <Compile Include="Assets\Src\Controller.cs" />
     <Compile Include="Assets\Src\CalcTools.cs" />
     <Compile Include="Assets\Src\BrickDef.cs" />
+    <Compile Include="Assets\Src\EventManager.cs" />
     <Compile Include="Assets\Src\BrickGroup.cs" />
     <Compile Include="Assets\TutorialInfo\Scripts\Readme.cs" />
     <Compile Include="Assets\Src\Brick.cs" />
