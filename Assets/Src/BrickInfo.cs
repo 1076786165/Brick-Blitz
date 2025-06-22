@@ -5,18 +5,21 @@ using UnityEngine;
 
 public class BrickInfo
 {
-    public string _name{get;}
-    public int[,] _shape{get;}
+    public string _name;
+    public int[,] _shape;
+    public string _img_name = "random";
 
-    public BrickInfo(string name , int[,] shape)
-    {
+    public BrickInfo(){
+    }
+
+    public BrickInfo(string name, int[,] shape){
         _name = name;
         _shape = shape;
     }
 
     public void EachBrickShape(Action<int, int> act){
-        for(int i = 0 ; i < 4 ; i++){
-            for(int j = 0 ; j < 4 ; j++){
+        for(int i = 0 ; i < _shape.GetLength(0) ; i++){
+            for(int j = 0 ; j < _shape.GetLength(1) ; j++){
                 if(_shape[i , j] > 0){
                     act(j , 3 - i);
                 }

@@ -12,6 +12,9 @@ public class Brick : MonoBehaviour
 
     public void Init(BrickInfo brick_info){
         _brick_info = brick_info;
+
+        Image image = GetComponent<Image>();
+        image.sprite = Resources.Load<Sprite>("Sprites/" + _brick_info._name);
     }
 
     public void setCoor(Vector2Int group_coor , Vector2Int local_coor){
@@ -33,6 +36,10 @@ public class Brick : MonoBehaviour
         Color newColor = targetImage.color;
         newColor.a = 0.5f;
         targetImage.color = newColor;
+    }
+
+    public void Eliminate(){
+        Destroy(gameObject);
     }
 
     void Start(){

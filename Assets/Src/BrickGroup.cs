@@ -63,6 +63,38 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
         setCoor(_begin_coor);
     }
 
+    public void checkEliminateX(List<int> eliminate_list , Action<Vector2Int> on_eliminate){
+        List<Brick> bricks_to_eliminate = new List<Brick>();
+        EachBrick((Brick brick) => {
+            if(eliminate_list.Contains(brick._global_coor.y)){
+                brick.Eliminate();
+                bricks_to_eliminate.Add(brick);
+                on_eliminate(brick._global_coor);
+            }
+            return false;
+        });
+
+        foreach(Brick brick in bricks_to_eliminate){
+            _bricks.Remove(brick);
+        }
+    }
+
+    public void checkEliminateY(List<int> eliminate_list , Action<Vector2Int> on_eliminate){
+        List<Brick> bricks_to_eliminate = new List<Brick>();
+        EachBrick((Brick brick) => {
+            if(eliminate_list.Contains(brick._global_coor.x)){
+                brick.Eliminate();
+                bricks_to_eliminate.Add(brick);
+                on_eliminate(brick._global_coor);
+            }
+            return false;
+        });
+
+        foreach(Brick brick in bricks_to_eliminate){
+            _bricks.Remove(brick);
+        }
+    }
+
     // DARG
     public void OnBeginDrag(PointerEventData eventData){
         if(_is_frozen){
