@@ -21,10 +21,20 @@ public class BrickInfo
         for(int i = 0 ; i < _shape.GetLength(0) ; i++){
             for(int j = 0 ; j < _shape.GetLength(1) ; j++){
                 if(_shape[i , j] > 0){
-                    act(j , 3 - i);
+                    act(j , i);
                 }
             }
         }
+    }
+
+    public Vector2 GetBrickActualNum(){
+        int width = 0;
+        int height = 0;
+        EachBrickShape((x, y) => {
+            if(x > width - 1) width = x + 1;
+            if(y > height - 1) height = y + 1;
+        });
+        return new Vector2(width, height);
     }
 
     public Vector2 GetBrickActualSize(){
@@ -34,6 +44,8 @@ public class BrickInfo
             if(x > width - 1) width = x + 1;
             if(y > height - 1) height = y + 1;
         });
+        width = width * 42;
+        height = height * 42;
         return new Vector2(width, height);
     }
 }

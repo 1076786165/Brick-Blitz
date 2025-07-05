@@ -72,7 +72,6 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
             return;
         }
         _last_Detect_coor = brick_group_coor;
-
         DetectResult detect_result = new VirtualBrick(brick_group , brick_group_coor).DetectingCoor(_board_map);
         if(_brick_cursor == null || _brick_cursor._group_id != brick_group._group_id){
             CreateBrickCursor(brick_group);

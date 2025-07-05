@@ -32,12 +32,14 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
             _bricks.Add(brick);
         });
         
-        Debug.Log(_brick_info._name + " " + _brick_info.GetBrickActualSize().ToString());
+        // GetComponent<RectTransform>().sizeDelta = _brick_info.GetBrickActualSize();
+
         BackToSlot();
     }
 
     public void BackToSlot(){
-        gameObject.transform.localPosition = CalcTools.GetCenterPosition(BrickController.Instance.GetSlotPosition(_slot_id) , _brick_info.GetBrickActualSize());
+        gameObject.transform.localPosition = CalcTools.GetCenterPosition(BrickController.Instance.GetSlotPosition(_slot_id) , _brick_info.GetBrickActualNum());
+        gameObject.transform.localScale = new Vector3(0.7f , 0.7f , 0.7f);
     }
 
     public void setCoor(Vector2Int coor){
@@ -100,7 +102,7 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
         if(_is_frozen){
             return;
         }
-        
+        gameObject.transform.localScale = new Vector3(0.7f , 0.7f , 0.7f);
         setBeginCoor(_coor);
     }
 
@@ -109,9 +111,11 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
         if(_is_frozen){
             return;
         }
+
+        Vector2 actual_size = _brick_info.GetBrickActualSize();
+        Vector2 new_pos = new Vector2(Input.mousePosition.x - actual_size.x / 2 , Input.mousePosition.y + 50);
         
-        // transform.position = Input.mousePosition + new Vector3(-168 / 2 , 100 , 0);
-        transform.position = Input.mousePosition;
+        transform.position = new_pos;
         transform.SetAsLastSibling();
 
         BrickController.Instance.onBrickDrag(this , eventData , transform.localPosition);
@@ -122,6 +126,7 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
         if(_is_frozen){
             return;
         }
+        gameObject.transform.localScale = Vector3.one;
         BrickController.Instance.onBrickDragEnd(this , eventData);
     }
 

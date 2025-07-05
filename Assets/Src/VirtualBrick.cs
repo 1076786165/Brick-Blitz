@@ -41,7 +41,7 @@ public class VirtualBrick
             // Debug.Log("------------------------------" + "DetectingCoor in " + _coor.ToString());
             if(_coor.x < 0 || _coor.x >= Config.BOARD_SIZE.x || _coor.y < 0 || _coor.y >= Config.BOARD_SIZE.y){
                 result.is_illegal = false;
-                Debug.Log("illegal coor in " + _coor.ToString());
+                // Debug.Log("illegal coor in " + _coor.ToString());
                 break;
             }
 
