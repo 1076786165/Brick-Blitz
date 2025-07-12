@@ -44,8 +44,8 @@ public class BrickInfo
             if(x > width - 1) width = x + 1;
             if(y > height - 1) height = y + 1;
         });
-        width = width * 42;
-        height = height * 42;
+        width = width * Config.BOARD_SIZE.x;
+        height = height * Config.BOARD_SIZE.y;
         return new Vector2(width, height);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,7 @@ public class BrickDef : MonoBehaviourSingleton<BrickDef>
     Dictionary<string, BrickInfo> _brick_defs = new Dictionary<string, BrickInfo>();
     List<BrickInfo> _brick_defs_list = new List<BrickInfo>();
 
+    String[] _brick_textures_names;
 
     protected override void Start()
     {
@@ -289,21 +291,26 @@ public class BrickDef : MonoBehaviourSingleton<BrickDef>
             _brick_defs_list.Add(brick_def);
         }
 
-        // BrickInfo L1 = new BrickInfo(){
-        //     _name = "L1",
-        //     _shape = new int[5 , 5]{
-        //         {0 , 0 , 0 , 0 , 0},
-        //         {0 , 0 , 0 , 0 , 0},
-        //         {0 , 0 , 0 , 0 , 0},
-        //         {0 , 0 , 0 , 0 , 0},
-        //         {0 , 0 , 0 , 0 , 0},
-        //     },
-        // };
-        // _brick_defs.Add("L1", L1);
+        _brick_textures_names = new String[]{
+            "img_brick_1",
+            "img_brick_2",
+            "img_brick_3",
+            "img_brick_4",
+            "img_brick_5",
+            "img_brick_6",
+            "img_brick_7",
+            "img_brick_8",
+            "img_brick_9"
+        };
+    }
+
+    public string getRandomBrickTextureName(){
+        int index = UnityEngine.Random.Range(0 , _brick_textures_names.Length - 1);
+        return _brick_textures_names[index];
     }
 
     public BrickInfo GetRandomBrickDef(){
-        int index = Random.Range(0 , _brick_defs_list.Count - 1);
+        int index = UnityEngine.Random.Range(0 , _brick_defs_list.Count - 1);
         return _brick_defs_list[index];
     }
 

@@ -18,7 +18,8 @@ public class BrickCursor : BrickGroup
         _brick_info.EachBrickShape((int i , int j) => {
             GameObject o_brick = Instantiate(BrickDef.Instance._brick_prefab , transform);
             Brick brick = o_brick.GetComponent<Brick>();
-            brick.setCoor(new Vector2Int(0 , 0) , new Vector2Int(i , j));
+            brick.Init(_brick_info , brick_group._img_name);
+            brick.SetCoor(new Vector2Int(0 , 0) , new Vector2Int(i , j));
             brick.SetIsCursor();
 
             _bricks.Add(brick);

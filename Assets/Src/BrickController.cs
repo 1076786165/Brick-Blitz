@@ -13,7 +13,7 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
     //棋盘相关
     private int[,] _board_map;
     private int _slots_size = 0;
-    private int[] _slot_flags;
+    private Dictionary<string , BrickGroup> _brick_slots;
     private int _setdown_flag = 0;
     private List<BrickGroup> _frozen_brick_groups;
     
@@ -28,10 +28,32 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
     {
         _board_map = new int[Config.BOARD_SIZE.x , Config.BOARD_SIZE.y];
         _slots_size = brick_slots.Count;
-        _slot_flags = new int[_slots_size];
+        _brick_slots = new Dictionary<string , BrickGroup>();
+        for(int i = 0 ; i < _slots_size ; i++)
+        {
+            UpdateSlotsFlag(i , null);
+        }
         _frozen_brick_groups = new List<BrickGroup>();
 
         StartCoroutine(createStratBricks());
+    }
+
+    private void UpdateSlotsFlag(int idx , BrickGroup brick_group){
+        _brick_slots["slot_" + idx.ToString()] = brick_group;
+    }
+
+    private BrickGroup GetSlotsFlag(int idx){
+        return _brick_slots["slot_" + idx.ToString()];
+    }
+
+    private bool IsSlotsEmpty(){
+        for(int i = 0 ; i < _slots_size ; i++)
+        {
+            if(GetSlotsFlag(i) != null){
+                return false;
+            }
+        }
+        return true;
     }
 
     public IEnumerator createStratBricks(){
@@ -42,12 +64,21 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
         createLiveBrickGroup(2);
     }
 
+    public void fillBrickSlost(){
+        for(int i = 0 ; i < _slots_size ; i++)
+        {
+            if(GetSlotsFlag(i) == null){
+                createLiveBrickGroup(i);
+            }
+        }
+    }
+
     public void createLiveBrickGroup(int slot_id)
     {
-        Debug.Assert(_slot_flags[slot_id] == 0 , "slot is already occupied！ " + slot_id);
+        Debug.Assert(GetSlotsFlag(slot_id) == null , "slot is already occupied！ " + slot_id);
         BrickGroup brick_group = Instantiate(BrickDef.Instance._brick_group_prefab , root).GetComponent<BrickGroup>();
         brick_group.InitInSlot(BrickDef.Instance.GetRandomBrickDef() , _create_id++ , slot_id);
-        _slot_flags[slot_id] = 1;
+        UpdateSlotsFlag(slot_id , brick_group);
     }
 
     public void createLooseBrickGroup(BrickInfo brick_info , Vector2Int coor)
@@ -95,23 +126,49 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
             Debug.Assert(_board_map[brick._global_coor.x , brick._global_coor.y] == 0 , "brick position is already occupied！ " + brick._global_coor.ToString());
 
             _board_map[brick._global_coor.x , brick._global_coor.y] = 1;
-            Debug.Log("brick set down at " + brick._global_coor.ToString());
+            // Debug.Log("brick set down at " + brick._global_coor.ToString());
             return false;
         });
+
+        RoundController.Instance.OnBrickSet(brick_group.GetBrickNum());
 
         _frozen_brick_groups.Add(brick_group);
 
         Destroy(_brick_cursor.gameObject);
         _brick_cursor = null;
 
-        _slot_flags[brick_group._slot_id] = 0;
+        UpdateSlotsFlag(brick_group._slot_id , null);
         _setdown_flag++;
-        if (_setdown_flag >= 2 || 1==1){
-            createLiveBrickGroup(brick_group._slot_id);
+        if (IsSlotsEmpty()){
+            fillBrickSlost();
         }
         
 
         CheckEliminate();
+
+        CheckBoardFull();
+    }
+
+    public void CheckBoardFull(){
+        bool is_full = true;
+        for(int idx = 0 ; idx < _slots_size ; idx++)
+        {
+            BrickGroup bg = GetSlotsFlag(idx);
+            if (bg != null){
+                for (int i = 0 ; i < Config.BOARD_SIZE.y ; i++){
+                    for (int j = 0 ; j < Config.BOARD_SIZE.x ; j++){
+                        DetectResult detect_result = new VirtualBrick(bg , new Vector2Int(j , i)).DetectingCoor(_board_map);
+                        if(detect_result.is_illegal){
+                            is_full = false;
+                            break;
+                        }
+                    }
+                }
+                
+            }
+        }
+
+        Debug.Log("is_full = " + is_full);
     }
 
     public void CheckEliminate(){
@@ -153,6 +210,7 @@ public class BrickController : MonoBehaviourSingleton<BrickController>
             });
         }
 
+        RoundController.Instance.OnEliminated(eliminate_list_x.Count + eliminate_list_y.Count);
     }
 
     public void EachBoardCoor(Action<int , int> act){

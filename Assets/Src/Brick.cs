@@ -10,14 +10,14 @@ public class Brick : MonoBehaviour
     public Vector2Int _local_coor{get;set;}
     public Vector2Int _global_coor{get;set;}
 
-    public void Init(BrickInfo brick_info){
+    public void Init(BrickInfo brick_info , string img_name){
         _brick_info = brick_info;
 
-        Image image = GetComponent<Image>();
-        image.sprite = Resources.Load<Sprite>("Sprites/" + _brick_info._name);
+        Image image = GetComponent<Image>();        
+        image.sprite = Resources.Load<Sprite>(img_name);
     }
 
-    public void setCoor(Vector2Int group_coor , Vector2Int local_coor){
+    public void SetCoor(Vector2Int group_coor , Vector2Int local_coor){
         _global_coor = group_coor + local_coor;
         _local_coor = local_coor;
 

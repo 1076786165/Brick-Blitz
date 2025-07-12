@@ -16,6 +16,7 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
 
     private Vector2Int _begin_coor;
     private bool _is_frozen{get;set;}
+    public String _img_name;
 
     public void InitInSlot(BrickInfo brick_info , int group_id , int slot_id){
         _brick_info = brick_info;
@@ -23,11 +24,20 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
         _slot_id = slot_id;
         _coor = new Vector2Int(0 , 0);
 
+        if(_brick_info._img_name == "random")
+        {   
+            _img_name = BrickDef.Instance.getRandomBrickTextureName();
+            
+        }else{
+            _img_name = _brick_info._img_name;
+        }
+
         _bricks = new List<Brick>();
         _brick_info.EachBrickShape((int i , int j) => {
             GameObject o_brick = Instantiate(BrickDef.Instance._brick_prefab , transform);
             Brick brick = o_brick.GetComponent<Brick>();
-            brick.setCoor(_coor , new Vector2Int(i , j));
+            brick.Init(_brick_info , _img_name);
+            brick.SetCoor(_coor , new Vector2Int(i , j));
 
             _bricks.Add(brick);
         });
@@ -42,7 +52,7 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
         gameObject.transform.localScale = new Vector3(0.7f , 0.7f , 0.7f);
     }
 
-    public void setCoor(Vector2Int coor){
+    public void SetCoor(Vector2Int coor){
         _coor = coor;
 
         updateCoor();
@@ -62,7 +72,7 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
     }
 
     public void restoreBeginCoor(){
-        setCoor(_begin_coor);
+        SetCoor(_begin_coor);
     }
 
     public void checkEliminateX(List<int> eliminate_list , Action<Vector2Int> on_eliminate){
@@ -139,7 +149,16 @@ public class BrickGroup : MonoBehaviour , IDragHandler , IEndDragHandler , IBegi
     }
 
     public void SetDown(Vector2Int coor){
-        setCoor(coor);
+        SetCoor(coor);
         _is_frozen = true;
+    }
+
+    public int GetBrickNum(){
+        int num = 0;
+        EachBrick((brick) => {
+            num++;
+            return false;
+        });
+        return num;
     }
 }
